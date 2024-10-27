@@ -82,21 +82,21 @@ name = "arceos_api"
 version = "0.1.0"
 dependencies = [
  "axalloc",
- "axconfig",
+ "axconfig 0.1.0",
  "axdisplay",
  "axdma",
  "axdriver",
  "axerrno",
  "axfeat",
  "axfs",
- "axhal",
+ "axhal 0.1.0",
  "axio",
- "axlog",
+ "axlog 0.1.0",
  "axmm",
  "axnet",
  "axruntime",
  "axsync",
- "axtask",
+ "axtask 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
 ]
 
 [[package]]
@@ -104,17 +104,17 @@ name = "arceos_posix_api"
 version = "0.1.0"
 dependencies = [
  "axalloc",
- "axconfig",
+ "axconfig 0.1.0",
  "axerrno",
  "axfeat",
  "axfs",
- "axhal",
+ "axhal 0.1.0",
  "axio",
- "axlog",
+ "axlog 0.1.0",
  "axnet",
  "axruntime",
  "axsync",
- "axtask",
+ "axtask 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
  "bindgen",
  "flatten_objects",
  "lazy_static",
@@ -185,6 +185,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "axconfig"
+version = "0.1.0"
+source = "git+https://github.com/arceos-org/arceos.git?branch=monolithic#d4cf00a7a62d9b7c3588f9f796a64e0f25ccdaab"
+dependencies = [
+ "serde",
+ "toml_edit",
+]
+
+[[package]]
 name = "axdisplay"
 version = "0.1.0"
 dependencies = [
@@ -201,9 +210,9 @@ version = "0.1.0"
 dependencies = [
  "allocator",
  "axalloc",
- "axconfig",
+ "axconfig 0.1.0",
  "axerrno",
- "axhal",
+ "axhal 0.1.0",
  "axmm",
  "kspin",
  "log",
@@ -215,7 +224,7 @@ name = "axdriver"
 version = "0.1.0"
 dependencies = [
  "axalloc",
- "axconfig",
+ "axconfig 0.1.0",
  "axdma",
  "axdriver_base",
  "axdriver_block",
@@ -223,7 +232,7 @@ dependencies = [
  "axdriver_net",
  "axdriver_pci",
  "axdriver_virtio",
- "axhal",
+ "axhal 0.1.0",
  "cfg-if",
  "log",
 ]
@@ -299,12 +308,12 @@ dependencies = [
  "axdisplay",
  "axdriver",
  "axfs",
- "axhal",
- "axlog",
+ "axhal 0.1.0",
+ "axlog 0.1.0",
  "axnet",
  "axruntime",
  "axsync",
- "axtask",
+ "axtask 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
  "kspin",
 ]
 
@@ -320,7 +329,7 @@ dependencies = [
  "axfs_vfs",
  "axio",
  "axsync",
- "axtask",
+ "axtask 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
  "cap_access",
  "cfg-if",
  "crate_interface",
@@ -371,8 +380,8 @@ dependencies = [
  "arm_pl011",
  "arm_pl031",
  "axalloc",
- "axconfig",
- "axlog",
+ "axconfig 0.1.0",
+ "axlog 0.1.0",
  "bitflags 2.6.0",
  "cfg-if",
  "cortex-a",
@@ -401,6 +410,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "axhal"
+version = "0.1.0"
+source = "git+https://github.com/arceos-org/arceos.git?branch=monolithic#d4cf00a7a62d9b7c3588f9f796a64e0f25ccdaab"
+dependencies = [
+ "aarch64-cpu",
+ "arm_gicv2",
+ "arm_pl011",
+ "axconfig 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
+ "axlog 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
+ "bitflags 2.6.0",
+ "cfg-if",
+ "dw_apb_uart",
+ "handler_table",
+ "int_ratio",
+ "kernel_guard",
+ "kspin",
+ "lazyinit",
+ "linkme",
+ "log",
+ "memory_addr",
+ "page_table_entry",
+ "percpu",
+ "raw-cpuid 11.1.0",
+ "riscv",
+ "sbi-rt",
+ "static_assertions",
+ "tock-registers",
+ "x2apic",
+ "x86",
+ "x86_64 0.15.1",
+]
+
+[[package]]
 name = "axio"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -424,9 +466,20 @@ dependencies = [
 name = "axlog"
 version = "0.1.0"
 dependencies = [
- "axlog",
+ "axlog 0.1.0",
  "cfg-if",
  "chrono",
+ "crate_interface",
+ "kspin",
+ "log",
+]
+
+[[package]]
+name = "axlog"
+version = "0.1.0"
+source = "git+https://github.com/arceos-org/arceos.git?branch=monolithic#d4cf00a7a62d9b7c3588f9f796a64e0f25ccdaab"
+dependencies = [
+ "cfg-if",
  "crate_interface",
  "kspin",
  "log",
@@ -436,9 +489,9 @@ dependencies = [
 name = "axmm"
 version = "0.1.0"
 dependencies = [
- "axconfig",
+ "axconfig 0.1.0",
  "axerrno",
- "axhal",
+ "axhal 0.1.0",
  "kspin",
  "lazyinit",
  "log",
@@ -452,10 +505,10 @@ dependencies = [
  "axdriver",
  "axdriver_net",
  "axerrno",
- "axhal",
+ "axhal 0.1.0",
  "axio",
  "axsync",
- "axtask",
+ "axtask 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
  "cfg-if",
  "lazyinit",
  "log",
@@ -468,15 +521,15 @@ name = "axruntime"
 version = "0.1.0"
 dependencies = [
  "axalloc",
- "axconfig",
+ "axconfig 0.1.0",
  "axdisplay",
  "axdriver",
  "axfs",
- "axhal",
- "axlog",
+ "axhal 0.1.0",
+ "axlog 0.1.0",
  "axmm",
  "axnet",
- "axtask",
+ "axtask 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
  "chrono",
  "crate_interface",
  "kernel_guard",
@@ -499,7 +552,7 @@ name = "axsync"
 version = "0.1.0"
 dependencies = [
  "axsync",
- "axtask",
+ "axtask 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
  "kspin",
  "rand",
 ]
@@ -508,9 +561,9 @@ dependencies = [
 name = "axtask"
 version = "0.1.0"
 dependencies = [
- "axconfig",
- "axhal",
- "axtask",
+ "axconfig 0.1.0",
+ "axhal 0.1.0",
+ "axtask 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
  "cfg-if",
  "crate_interface",
  "kernel_guard",
@@ -520,6 +573,25 @@ dependencies = [
  "memory_addr",
  "percpu",
  "rand",
+ "scheduler",
+ "timer_list",
+]
+
+[[package]]
+name = "axtask"
+version = "0.1.0"
+source = "git+https://github.com/arceos-org/arceos.git?branch=monolithic#d4cf00a7a62d9b7c3588f9f796a64e0f25ccdaab"
+dependencies = [
+ "axconfig 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
+ "axhal 0.1.0 (git+https://github.com/arceos-org/arceos.git?branch=monolithic)",
+ "cfg-if",
+ "crate_interface",
+ "kernel_guard",
+ "kspin",
+ "lazyinit",
+ "log",
+ "memory_addr",
+ "percpu",
  "scheduler",
  "timer_list",
 ]

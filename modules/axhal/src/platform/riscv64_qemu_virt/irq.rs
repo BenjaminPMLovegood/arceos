@@ -71,7 +71,7 @@ pub fn dispatch_irq(scause: usize) {
         @TIMER => {
             trace!("IRQ: timer");
             unsafe {
-                let mut timer_handler = TIMER_HANDLER.lock();
+                let timer_handler = TIMER_HANDLER.lock();
                 timer_handler();
                 // TIMER_HANDLER();
             }

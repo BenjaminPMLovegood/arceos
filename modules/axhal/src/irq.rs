@@ -36,7 +36,7 @@ pub(crate) fn register_handler_common(irq_num: usize, handler: IrqHandler) -> bo
 }
 
 #[register_trap_handler(IRQ)]
-fn handler_irq(irq_num: usize) -> bool {
+pub fn handler_irq(irq_num: usize) -> bool {
     let guard = kernel_guard::NoPreempt::new();
     dispatch_irq(irq_num);
     drop(guard); // rescheduling may occur when preemption is re-enabled.

@@ -59,7 +59,7 @@ axmm = { path = "modules/axmm" }
 axnet = { path = "modules/axnet" }
 axruntime = { path = "modules/axruntime" }
 axsync = { path = "modules/axsync" }
-axtask = { path = "modules/axtask" }
+axtask = { git = "https://github.com/arceos-org/arceos.git", branch = "monolithic" }
 axdma = { path = "modules/axdma" }
 
 [profile.release]
