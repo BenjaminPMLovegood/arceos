@@ -125,9 +125,8 @@ dependencies = [
 [[package]]
 name = "arm_gicv2"
 version = "0.1.0"
-source = "git+https://github.com/arceos-hypervisor/arm_gicv2?rev=7acc0dd#7acc0dd1e1fefa90b4cd45342072d2350a74b071"
+source = "git+https://github.com/arceos-hypervisor/arm_gicv2?branch=axvcpuhal#2908fd02d954b44695027805de234d5b3d045cf0"
 dependencies = [
- "crate_interface",
  "tock-registers",
 ]
 

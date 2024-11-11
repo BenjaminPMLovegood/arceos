@@ -7,6 +7,9 @@ use crate::trap::{register_trap_handler, IRQ};
 
 pub use crate::platform::irq::{register_handler, set_enable};
 
+#[cfg(target_arch = "aarch64")]
+pub use crate::platform::irq::fetch_irq;
+
 /// The type if an IRQ handler.
 pub type IrqHandler = handler_table::Handler;
 
@@ -36,7 +39,7 @@ pub(crate) fn register_handler_common(irq_num: usize, handler: IrqHandler) -> bo
 }
 
 #[register_trap_handler(IRQ)]
-fn handler_irq(irq_num: usize) -> bool {
+pub fn handler_irq(irq_num: usize) -> bool {
     let guard = kernel_guard::NoPreempt::new();
     dispatch_irq(irq_num);
     drop(guard); // rescheduling may occur when preemption is re-enabled.
