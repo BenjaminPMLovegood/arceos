@@ -38,6 +38,11 @@ pub(crate) fn register_handler_common(irq_num: usize, handler: IrqHandler) -> bo
     false
 }
 
+/// Core IRQ handling routine, registered at [`IRQ`],
+/// which dispatches IRQs to registered handlers.
+///
+/// Note: this function is denoted as public here because it'll be called by the
+/// hypervisor for hypervisor reserved IRQ handling.
 #[register_trap_handler(IRQ)]
 pub fn handler_irq(irq_num: usize) -> bool {
     let guard = kernel_guard::NoPreempt::new();
