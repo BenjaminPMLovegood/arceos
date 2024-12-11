@@ -18,6 +18,9 @@ pub const TIMER_IRQ_NUM: usize = translate_irq(10, InterruptType::PPI).unwrap();
 /// The UART IRQ number.
 pub const UART_IRQ_NUM: usize = translate_irq(UART_IRQ, InterruptType::SPI).unwrap();
 
+/// The IPI IRQ number.
+pub const IPI_IRQ_NUM: usize = translate_irq(1, InterruptType::SGI).unwrap();
+
 const GICD_BASE: PhysAddr = pa!(GICD_PADDR);
 const GICC_BASE: PhysAddr = pa!(GICC_PADDR);
 
@@ -40,6 +43,12 @@ pub fn set_enable(irq_num: usize, enabled: bool) {
 pub fn register_handler(irq_num: usize, handler: IrqHandler) -> bool {
     trace!("register handler irq {}", irq_num);
     crate::irq::register_handler_common(irq_num, handler)
+}
+
+/// Sends Software Generated Interrupt (SGI)(s) (usually IPI) to the given CPUs.
+#[cfg(feature = "smp")]
+pub fn send_sgi(cpu_if: usize, irq_num: usize) {
+    GICD.lock().send_sgi(cpu_if, irq_num);
 }
 
 /// Fetches the IRQ number.

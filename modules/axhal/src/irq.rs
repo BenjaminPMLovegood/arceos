@@ -5,7 +5,7 @@ use handler_table::HandlerTable;
 use crate::platform::irq::{MAX_IRQ_COUNT, dispatch_irq};
 use crate::trap::{IRQ, register_trap_handler};
 
-pub use crate::platform::irq::{register_handler, set_enable};
+pub use crate::platform::irq::{register_handler, set_enable, IPI_IRQ_NUM};
 
 #[cfg(target_arch = "aarch64")]
 pub use crate::platform::irq::fetch_irq;

@@ -20,6 +20,7 @@ fp_simd = ["axhal/fp_simd"]
 
 # Interrupts
 irq = ["axhal/irq", "axruntime/irq", "axtask?/irq"]
+ipi = ["axruntime/ipi"]
 
 # Memory
 alloc = ["axalloc", "axruntime/alloc"]
