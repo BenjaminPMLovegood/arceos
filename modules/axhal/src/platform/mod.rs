@@ -26,9 +26,9 @@ cfg_if::cfg_if! {
         mod aarch64_rk3588j;
         pub use self::aarch64_rk3588j::*;
     } else {
-        // mod dummy;
-        // pub use self::dummy::*;
-        mod aarch64_qemu_virt;
-        pub use self::aarch64_qemu_virt::*;
+        mod dummy;
+        pub use self::dummy::*;
+        // mod aarch64_qemu_virt;
+        // pub use self::aarch64_qemu_virt::*;
     }
 }

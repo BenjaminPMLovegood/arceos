@@ -450,6 +450,7 @@ impl AxRunQueue {
         // put it back to the run queue (except idle task).
         if task.transition_state(current_state, TaskState::Ready) && !task.is_idle() {
             // TODO: priority
+            #[cfg(feature = "smp")]
             task.set_cpu_id(self.cpu_id as _);
             self.scheduler.lock().put_prev_task(task, preempt);
             true

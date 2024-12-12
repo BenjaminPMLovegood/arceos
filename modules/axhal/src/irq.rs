@@ -5,7 +5,10 @@ use handler_table::HandlerTable;
 use crate::platform::irq::{dispatch_irq, MAX_IRQ_COUNT};
 use crate::trap::{register_trap_handler, IRQ};
 
-pub use crate::platform::irq::{register_handler, set_enable, IPI_IRQ_NUM};
+pub use crate::platform::irq::{register_handler, set_enable};
+
+#[cfg(feature = "ipi")]
+pub use crate::platform::irq::{send_sgi_all, send_sgi_one, IPI_IRQ_NUM};
 
 #[cfg(target_arch = "aarch64")]
 pub use crate::platform::irq::fetch_irq;
