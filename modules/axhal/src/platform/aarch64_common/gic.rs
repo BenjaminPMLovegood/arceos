@@ -41,14 +41,18 @@ pub fn set_enable(irq_num: usize, enabled: bool) {
 /// It also enables the IRQ if the registration succeeds. It returns `false` if
 /// the registration failed.
 pub fn register_handler(irq_num: usize, handler: IrqHandler) -> bool {
-    trace!("register handler irq {}", irq_num);
+    warn!("register handler irq {}", irq_num);
     crate::irq::register_handler_common(irq_num, handler)
 }
 
-/// Sends Software Generated Interrupt (SGI)(s) (usually IPI) to the given CPUs.
-#[cfg(feature = "smp")]
-pub fn send_sgi(cpu_if: usize, irq_num: usize) {
-    GICD.lock().send_sgi(cpu_if, irq_num);
+/// Sends Software Generated Interrupt (SGI)(s) (usually IPI) to the given dest CPU.
+pub fn send_sgi_one(dest_cpu_id: usize, irq_num: usize) {
+    GICD.lock().send_sgi(dest_cpu_id, irq_num);
+}
+
+/// Sends a broadcast IPI to all CPUs.
+pub fn send_sgi_all(irq_num: usize) {
+    GICD.lock().send_sgi_all_except_self(irq_num);
 }
 
 /// Fetches the IRQ number.
