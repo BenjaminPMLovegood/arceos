@@ -21,4 +21,4 @@ cfg-if = "1.0"
 kspin = "0.1"
 memory_addr = "0.3"
 axerrno = "0.1"
-allocator = { git = "https://github.com/arceos-org/allocator.git", tag = "v0.1.1", features = ["bitmap", "page-alloc-64g"] }
+allocator = { workspace = true, features = ["bitmap", "page-alloc-64g"] }
