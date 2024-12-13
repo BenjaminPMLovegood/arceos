@@ -1,5 +1,7 @@
 use crate::{irq::IrqHandler, mem::phys_to_virt};
-use arm_gicv2::{translate_irq, GicCpuInterface, GicDistributor, InterruptType};
+use arm_gicv2::{
+    translate_irq, GicCpuInterface, GicDistributor, GicHypervisorInterface, InterruptType,
+};
 use kspin::SpinNoIrq;
 use memory_addr::PhysAddr;
 
@@ -19,9 +21,14 @@ pub const UART_IRQ_NUM: usize = translate_irq(axconfig::UART_IRQ, InterruptType:
 
 const GICD_BASE: PhysAddr = pa!(axconfig::GICD_PADDR);
 const GICC_BASE: PhysAddr = pa!(axconfig::GICC_PADDR);
+const GICH_BASE: PhysAddr = pa!(axconfig::GICH_PADDR);
 
 static GICD: SpinNoIrq<GicDistributor> =
     SpinNoIrq::new(GicDistributor::new(phys_to_virt(GICD_BASE).as_mut_ptr()));
+
+static GICH: SpinNoIrq<GicHypervisorInterface> = SpinNoIrq::new(GicHypervisorInterface::new(
+    phys_to_virt(GICH_BASE).as_mut_ptr(),
+));
 
 // per-CPU, no lock
 static GICC: GicCpuInterface = GicCpuInterface::new(phys_to_virt(GICC_BASE).as_mut_ptr());
@@ -72,4 +79,21 @@ pub(crate) fn init_primary() {
 #[cfg(feature = "smp")]
 pub(crate) fn init_secondary() {
     GICC.init();
+}
+
+pub struct GicInterface {}
+
+/// Sets the value of a List Register (LR) at the specified index.
+///
+/// This function locks the Generic Interrupt Controller Hypervisor (GICH) interface
+/// and sets the specified List Register to the provided value.
+///
+/// # Arguments
+///
+/// * `idx` - The index of the List Register to set.
+/// * `lr` - The value to set in the List Register.
+impl GicInterface {
+    pub fn set_lr(&self, idx: usize, lr: u32) {
+        GICH.lock().set_lr(idx, lr);
+    }
 }
