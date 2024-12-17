@@ -14,7 +14,7 @@ pub(super) mod vectors {
     pub const APIC_TIMER_VECTOR: u8 = 0xf0;
     pub const APIC_SPURIOUS_VECTOR: u8 = 0xf1;
     pub const APIC_ERROR_VECTOR: u8 = 0xf2;
-    pub const APIC_IPI_VECTOR: u8 = 0xf2;
+    pub const APIC_IPI_VECTOR: u8 = 0xf3;
 }
 
 /// The maximum number of IRQs.
