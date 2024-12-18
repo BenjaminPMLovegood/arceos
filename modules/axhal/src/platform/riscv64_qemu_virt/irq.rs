@@ -66,9 +66,9 @@ pub const TIMER_IRQ_NUM: usize = S_TIMER;
 pub const IPI_IRQ_NUM: usize = S_SOFT;
 
 macro_rules! with_cause {
-    ($cause: expr, 
-        @TIMER => $timer_op: expr, 
-        @IPI => $ipi_op: expr, 
+    ($cause: expr,
+        @TIMER => $timer_op: expr,
+        @IPI => $ipi_op: expr,
         @EXT => $ext_op: expr $(,)?) => {
         match $cause {
             S_TIMER => $timer_op,
@@ -177,19 +177,3 @@ pub(super) fn init_percpu() {
         sie::set_sext();
     }
 }
-
-#[cfg(feature = "ipi")]
-mod ipi {
-    pub const IPI_IRQ_NUM: usize = 0;
-
-    pub fn send_sgi_one(_dest_cpu: usize, _irq_num: usize) {
-        unimplemented!()
-    }
-
-    pub fn send_sgi_all(_irq_num: usize) {
-        unimplemented!()
-    }
-}
-
-#[cfg(feature = "ipi")]
-pub use ipi::*;
