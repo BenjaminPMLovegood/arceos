@@ -1153,9 +1153,9 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "percpu"
-version = "0.1.5"
+version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7156fa6801337eb593af0c6d664b92de216c5e53e761e1eb6e119cff542d195"
+checksum = "66a1cb7a2ae1e4ada6e7fd9e46b6b2024353f28d17661d480c8238927571cbd3"
 dependencies = [
  "cfg-if",
  "kernel_guard",
