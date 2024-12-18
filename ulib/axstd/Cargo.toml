@@ -27,6 +27,7 @@ fp_simd = ["axfeat/fp_simd"]
 
 # Interrupts
 irq = ["arceos_api/irq", "axfeat/irq"]
+ipi = ["arceos_api/ipi", "axfeat/ipi"]
 
 # Memory
 alloc = ["arceos_api/alloc", "axfeat/alloc", "axio/alloc"]
