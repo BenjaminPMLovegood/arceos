@@ -177,3 +177,19 @@ pub(super) fn init_percpu() {
         sie::set_sext();
     }
 }
+
+#[cfg(feature = "ipi")]
+mod ipi {
+    pub const IPI_IRQ_NUM: usize = 0;
+
+    pub fn send_sgi_one(_dest_cpu: usize, _irq_num: usize) {
+        unimplemented!()
+    }
+
+    pub fn send_sgi_all(_irq_num: usize) {
+        unimplemented!()
+    }
+}
+
+#[cfg(feature = "ipi")]
+pub use ipi::*;
