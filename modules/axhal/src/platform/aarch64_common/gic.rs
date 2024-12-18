@@ -65,6 +65,13 @@ pub fn fetch_irq() -> usize {
 /// up in the IRQ handler table and calls the corresponding handler. If
 /// necessary, it also acknowledges the interrupt controller after handling.
 pub fn dispatch_irq(irq_no: usize) {
+    // I know, `irq_no == 0` seems very strange here.
+    // The truth is, the previous design of ArceOS in aarch64 DO NOT fetch the IRQ number from GICC,
+    // until the function closure passed to `GICC.handle_irq`.
+    // So, the `irq_no` is always 0 when `dispatch_irq` is called by `handler_irq` from inside ArceOS.
+    //
+    // However, when `handler_irq` is called by the arceos-vmm app, the `irq_no` has been fetched from GICC, so we can not use the `handler_irq` directly.
+    // Instead, we call `GICC.eoi` and `GICC.dir` manually.
     if irq_no == 0 {
         GICC.handle_irq(|irq_num| crate::irq::dispatch_irq_common(irq_num as _));
     } else {
