@@ -21,11 +21,14 @@ pub const UART_IRQ_NUM: usize = translate_irq(axconfig::UART_IRQ, InterruptType:
 
 const GICD_BASE: PhysAddr = pa!(axconfig::GICD_PADDR);
 const GICC_BASE: PhysAddr = pa!(axconfig::GICC_PADDR);
+
+#[cfg(feature = "hv")]
 const GICH_BASE: PhysAddr = pa!(axconfig::GICH_PADDR);
 
 static GICD: SpinNoIrq<GicDistributor> =
     SpinNoIrq::new(GicDistributor::new(phys_to_virt(GICD_BASE).as_mut_ptr()));
 
+#[cfg(feature = "hv")]
 static GICH: SpinNoIrq<GicHypervisorInterface> = SpinNoIrq::new(GicHypervisorInterface::new(
     phys_to_virt(GICH_BASE).as_mut_ptr(),
 ));

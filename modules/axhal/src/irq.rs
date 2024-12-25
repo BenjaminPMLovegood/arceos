@@ -50,3 +50,33 @@ pub fn handler_irq(irq_num: usize) -> bool {
     drop(guard); // rescheduling may occur when preemption is re-enabled.
     true
 }
+
+/// A trait for interrupt controller drivers that handle hardware interrupts.
+///
+/// This trait defines the basic operations that any interrupt controller should implement,
+/// including clearing, fetching, enabling/disabling interrupts, and inter-processor interrupts (IPI).
+///
+/// # Methods
+///
+/// * `clear_current_irq` - Clears the currently active interrupt
+/// * `clear_irq` - Clears all pending interrupts
+/// * `fetch_irq` - Gets the next pending interrupt number if any
+/// * `finish_irq` - Completes handling of current interrupt
+/// * `enable_irq` - Enables or disables a specific interrupt
+/// * `register_irq` - Registers an interrupt number for handling
+/// * `inject_irq` - Injects/triggers a specific interrupt
+/// * `send_ipi` - Sends an inter-processor interrupt to another CPU
+///
+/// # Safety
+///
+/// Implementations must ensure proper hardware synchronization and interrupt handling.
+pub trait IrqController {
+    fn clear_current_irq(for_hypervisor: bool);
+    fn clear_irq();
+    fn fetch_irq() -> Option<usize>;
+    fn finish_irq();
+    fn enable_irq(irq_num: usize, enable: bool);
+    fn register_irq(irq_num: usize) -> bool;
+    fn inject_irq(irq_num: usize);
+    fn send_ipi(cpu_id: usize, ipi_id: usize);
+}
