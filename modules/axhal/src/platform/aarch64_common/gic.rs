@@ -18,6 +18,9 @@ pub const TIMER_IRQ_NUM: usize = translate_irq(10, InterruptType::PPI).unwrap();
 /// The UART IRQ number.
 pub const UART_IRQ_NUM: usize = translate_irq(UART_IRQ, InterruptType::SPI).unwrap();
 
+/// The IPI IRQ number.
+pub const IPI_IRQ_NUM: usize = translate_irq(1, InterruptType::SGI).unwrap();
+
 const GICD_BASE: PhysAddr = pa!(GICD_PADDR);
 const GICC_BASE: PhysAddr = pa!(GICC_PADDR);
 
@@ -38,8 +41,18 @@ pub fn set_enable(irq_num: usize, enabled: bool) {
 /// It also enables the IRQ if the registration succeeds. It returns `false` if
 /// the registration failed.
 pub fn register_handler(irq_num: usize, handler: IrqHandler) -> bool {
-    trace!("register handler irq {}", irq_num);
+    warn!("register handler irq {}", irq_num);
     crate::irq::register_handler_common(irq_num, handler)
+}
+
+/// Sends Software Generated Interrupt (SGI)(s) (usually IPI) to the given dest CPU.
+pub fn send_sgi_one(dest_cpu_id: usize, irq_num: usize) {
+    GICD.lock().send_sgi(dest_cpu_id, irq_num);
+}
+
+/// Sends a broadcast IPI to all CPUs.
+pub fn send_sgi_all(irq_num: usize) {
+    GICD.lock().send_sgi_all_except_self(irq_num);
 }
 
 /// Fetches the IRQ number.
@@ -53,6 +66,13 @@ pub fn fetch_irq() -> usize {
 /// up in the IRQ handler table and calls the corresponding handler. If
 /// necessary, it also acknowledges the interrupt controller after handling.
 pub fn dispatch_irq(irq_no: usize) {
+    // I know, `irq_no == 0` seems very strange here.
+    // The truth is, the previous design of ArceOS in aarch64 DO NOT fetch the IRQ number from GICC,
+    // until the function closure passed to `GICC.handle_irq`.
+    // So, the `irq_no` is always 0 when `dispatch_irq` is called by `handler_irq` from inside ArceOS.
+    //
+    // However, when `handler_irq` is called by the arceos-vmm app, the `irq_no` has been fetched from GICC, so we can not use the `handler_irq` directly.
+    // Instead, we call `GICC.eoi` and `GICC.dir` manually.
     if irq_no == 0 {
         GICC.handle_irq(|irq_num| crate::irq::dispatch_irq_common(irq_num as _));
     } else {

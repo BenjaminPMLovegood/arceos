@@ -20,6 +20,7 @@ fp_simd = ["axhal/fp_simd"]
 
 # Interrupts
 irq = ["axhal/irq", "axruntime/irq", "axtask?/irq"]
+ipi = ["irq", "dep:axipi", "axhal/ipi", "axruntime/ipi"]
 
 # Memory
 alloc = ["axalloc", "axruntime/alloc"]
@@ -59,7 +60,7 @@ driver-ixgbe = ["axdriver?/ixgbe"]
 driver-bcm2835-sdhci = ["axdriver?/bcm2835-sdhci"]
 
 #Hypervisor support 
-hv = ["axhal/hv"]
+hv = ["axhal/hv", "ipi"]
 
 # Logging
 log-level-off = ["axlog/log-level-off"]
@@ -80,4 +81,5 @@ axnet = { workspace = true, optional = true }
 axdisplay = { workspace = true, optional = true }
 axsync = { workspace = true, optional = true }
 axtask = { workspace = true, optional = true }
+axipi = { workspace = true, optional = true }
 kspin = { version = "0.1", optional = true }
