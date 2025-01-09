@@ -1,10 +1,10 @@
-//! TODO: PLIC
+//! Minimal PLIC support temporarily disabled.
 
 use kspin::SpinNoIrq;
 use lazyinit::LazyInit;
 
 use riscv::register::sie;
-use riscv_plic::{HartContext, InterruptSource, Plic};
+// use riscv_plic::{HartContext, InterruptSource, Plic};
 use sbi_rt::{send_ipi, HartMask};
 
 use memory_addr::{pa, PhysAddr};
@@ -13,31 +13,31 @@ use crate::cpu::this_cpu_id;
 use crate::irq::IrqHandler;
 use crate::mem::phys_to_virt;
 
-struct Context {
-    hart_id: usize,
-}
+// struct Context {
+//     hart_id: usize,
+// }
 
-impl HartContext for Context {
-    fn index(self) -> usize {
-        self.hart_id * 2 + 1
-    }
-}
+// impl HartContext for Context {
+//     fn index(self) -> usize {
+//         self.hart_id * 2 + 1
+//     }
+// }
 
-impl Context {
-    const fn new(hart_id: usize) -> Self {
-        Self { hart_id }
-    }
-}
+// impl Context {
+//     const fn new(hart_id: usize) -> Self {
+//         Self { hart_id }
+//     }
+// }
 
-struct Interrupt {
-    irq_num: usize,
-}
+// struct Interrupt {
+//     irq_num: usize,
+// }
 
-impl InterruptSource for Interrupt {
-    fn id(self) -> core::num::NonZeroU32 {
-        core::num::NonZeroU32::new(self.irq_num as u32).unwrap()
-    }
-}
+// impl InterruptSource for Interrupt {
+//     fn id(self) -> core::num::NonZeroU32 {
+//         core::num::NonZeroU32::new(self.irq_num as u32).unwrap()
+//     }
+// }
 
 /// `Interrupt` bit in `scause`
 pub(super) const INTC_IRQ_BASE: usize = 1 << (usize::BITS - 1);
@@ -79,21 +79,21 @@ macro_rules! with_cause {
     };
 }
 
-const PLIC_BASE: PhysAddr = pa!(axconfig::PLIC_PADDR);
+// const PLIC_BASE: PhysAddr = pa!(axconfig::PLIC_PADDR);
 
-static PLIC: SpinNoIrq<Plic> = SpinNoIrq::new(Plic::new(phys_to_virt(PLIC_BASE).as_mut_ptr()));
+// static PLIC: SpinNoIrq<Plic> = SpinNoIrq::new(Plic::new(phys_to_virt(PLIC_BASE).as_mut_ptr()));
 
 /// Enables or disables the given IRQ.
 pub fn set_enable(irq_num: usize, enabled: bool) {
     // TODO: set enable in PLIC
-    let source = Interrupt { irq_num };
-    let context = Context::new(this_cpu_id());
+    // let source = Interrupt { irq_num };
+    // let context = Context::new(this_cpu_id());
 
-    if enabled {
-        PLIC.lock().enable(source, context);
-    } else {
-        PLIC.lock().disable(source, context);
-    }
+    // if enabled {
+    //     PLIC.lock().enable(source, context);
+    // } else {
+    //     PLIC.lock().disable(source, context);
+    // }
 }
 
 /// Registers an IRQ handler for the given IRQ.
@@ -157,18 +157,19 @@ pub fn dispatch_irq(scause: usize) {
             IPI_HANDLER();
         },
         @EXT => {
-            if let Some(irq_num) = PLIC.lock().claim(Context::new(this_cpu_id())) {
-                let irq_num = irq_num.get() as usize;
-                trace!("IRQ: external {}", irq_num);
-                crate::irq::dispatch_irq_common(irq_num);
-                PLIC.lock().complete(Context::new(this_cpu_id()), Interrupt { irq_num });
-            }
+            // if let Some(irq_num) = PLIC.lock().claim(Context::new(this_cpu_id())) {
+            //     let irq_num = irq_num.get() as usize;
+            //     trace!("IRQ: external {}", irq_num);
+            //     crate::irq::dispatch_irq_common(irq_num);
+            //     PLIC.lock().complete(Context::new(this_cpu_id()), Interrupt { irq_num });
+            // }
+            crate::irq::dispatch_irq_common(0);
         },
     );
 }
 
 pub(super) fn init_percpu() {
-    PLIC.lock().init_by_context(Context::new(this_cpu_id()));
+    // PLIC.lock().init_by_context(Context::new(this_cpu_id()));
 
     // enable soft interrupts, timer interrupts, and external interrupts
     unsafe {
