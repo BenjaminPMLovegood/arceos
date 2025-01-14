@@ -1,6 +1,6 @@
 #![allow(unused_imports)]
 
-use aarch64_cpu::registers::{CNTFRQ_EL0, CNTP_CTL_EL0, CNTP_TVAL_EL0, CNTPCT_EL0};
+use aarch64_cpu::registers::{CNTFRQ_EL0, CNTP_CTL_EL0, CNTP_TVAL_EL0, CNTPCT_EL0, CNTV_TVAL_EL0};
 use int_ratio::Ratio;
 use tock_registers::interfaces::{Readable, Writeable};
 
@@ -48,8 +48,22 @@ pub fn set_oneshot_timer(deadline_ns: u64) {
     }
 }
 
+pub fn set_oneshot_timer_cntp(deadline_ns: u64) {
+    // debug!("set_oneshot_timer: cntp_deadline_ns={}", deadline_ns);
+    let cnptct = CNTPCT_EL0.get();
+    let cnptct_deadline = nanos_to_ticks(deadline_ns);
+    if cnptct < cnptct_deadline {
+        let interval = cnptct_deadline - cnptct;
+        debug_assert!(interval <= u32::MAX as u64);
+        CNTV_TVAL_EL0.set(interval);
+    } else {
+        CNTV_TVAL_EL0.set(0);
+    }
+}
+
 #[cfg(all(feature = "irq", feature = "hv"))]
 pub fn set_oneshot_timer(deadline_ns: u64) {
+    // debug!("set_oneshot_timer: deadline_ns={}", deadline_ns);
     let cnptct = CNTPCT_EL0.get();
     let cnptct_deadline = nanos_to_ticks(deadline_ns);
     if cnptct < cnptct_deadline {

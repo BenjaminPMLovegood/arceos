@@ -10,9 +10,9 @@ pub type TimeValue = Duration;
 
 #[cfg(feature = "irq")]
 pub use crate::platform::irq::TIMER_IRQ_NUM;
-#[cfg(feature = "irq")]
-pub use crate::platform::time::set_oneshot_timer;
 pub use crate::platform::time::{current_ticks, epochoffset_nanos, nanos_to_ticks, ticks_to_nanos};
+#[cfg(feature = "irq")]
+pub use crate::platform::time::{set_oneshot_timer, set_oneshot_timer_cntp};
 
 /// Number of milliseconds in a second.
 pub const MILLIS_PER_SEC: u64 = 1_000;
