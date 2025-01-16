@@ -54,6 +54,7 @@ riscv = "0.11"
 sbi-rt = { version = "0.0.3", features = ["legacy"] }
 riscv_plic  = { version = "0.1.0" }
 riscv_goldfish = { version = "0.1", optional = true }
+uart8250 = { version = "0.5.0", features = ["fmt"], optional = true }
 
 [target.'cfg(target_arch = "aarch64")'.dependencies]
 aarch64-cpu = "9.4"
