@@ -1,6 +1,8 @@
 use crate::{irq::IrqHandler, mem::phys_to_virt};
-use arm_gicv2::{GicCpuInterface, GicDistributor, InterruptType, translate_irq};
-use axconfig::devices::{GICC_PADDR, GICD_PADDR, UART_IRQ};
+use arm_gicv2::{
+    GicCpuInterface, GicDistributor, GicHypervisorInterface, InterruptType, translate_irq,
+};
+use axconfig::devices::{GICC_PADDR, GICD_PADDR, GICH_PADDR, GICV_PADDR, UART_IRQ};
 use kspin::SpinNoIrq;
 use memory_addr::PhysAddr;
 
@@ -20,12 +22,17 @@ pub const UART_IRQ_NUM: usize = translate_irq(UART_IRQ, InterruptType::SPI).unwr
 
 const GICD_BASE: PhysAddr = pa!(GICD_PADDR);
 const GICC_BASE: PhysAddr = pa!(GICC_PADDR);
+const GICV_BASE: PhysAddr = pa!(GICV_PADDR);
+const GICH_BASE: PhysAddr = pa!(GICH_PADDR);
 
 static GICD: SpinNoIrq<GicDistributor> =
     SpinNoIrq::new(GicDistributor::new(phys_to_virt(GICD_BASE).as_mut_ptr()));
 
 // per-CPU, no lock
 static GICC: GicCpuInterface = GicCpuInterface::new(phys_to_virt(GICC_BASE).as_mut_ptr());
+static GICV: GicCpuInterface = GicCpuInterface::new(phys_to_virt(GICV_BASE).as_mut_ptr());
+static GICH: GicHypervisorInterface =
+    GicHypervisorInterface::new(phys_to_virt(GICH_BASE).as_mut_ptr());
 
 /// Enables or disables the given IRQ.
 pub fn set_enable(irq_num: usize, enabled: bool) {
@@ -67,6 +74,24 @@ pub(crate) fn init_primary() {
     info!("Initialize GICv2...");
     GICD.lock().init();
     GICC.init();
+    GICV.init();
+}
+
+pub struct MyVgic {}
+
+impl MyVgic {
+    pub fn get_gich() -> &'static GicHypervisorInterface {
+        &GICH
+    }
+    pub fn get_gicd() -> &'static SpinNoIrq<GicDistributor> {
+        &GICD
+    }
+    pub fn get_gicc() -> &'static GicCpuInterface {
+        &GICC
+    }
+    pub fn get_gicv() -> &'static GicCpuInterface {
+        &GICV
+    }
 }
 
 /// Initializes GICC on secondary CPUs.
